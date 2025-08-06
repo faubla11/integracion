@@ -1,0 +1,28 @@
+{
+  "name": "integracion",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/faubla11/integracion.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/faubla11/integracion/issues"
+  },
+  "homepage": "https://github.com/faubla11/integracion#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "jest": "^30.0.5",
+    "supertest": "^7.1.4"
+  }
+}
