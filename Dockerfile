@@ -1,21 +1,8 @@
 # Dockerfile
-FROM node:24
+FROM nginx:alpine
 
-# Crear directorio de la aplicación
-WORKDIR /usr/src/app
+# Copiamos los archivos a la carpeta del servidor de nginx
+COPY . /usr/share/nginx/html
 
-# Copiar archivos al contenedor
-COPY package*.json ./
-COPY index.js .
-
-# Instalar dependencias
-RUN npm install
-
-#Copiar el resto de los archivos
-COPY users.json .
-
-# Exponer el puerto de la aplicación
-EXPOSE 3000
-
-# Comando para iniciar la aplicación
-CMD ["node", "index.js"]
+# Puerto expuesto
+EXPOSE 80

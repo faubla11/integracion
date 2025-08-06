@@ -2,44 +2,40 @@ pipeline {
     agent any
 
     tools {
-        nodejs "NodeJS24"
-        dockerTool "dockertools" 
+        dockerTool 'dockertools'  // Cambia el nombre de la herramienta según tu configuración en Jenkins
+    }
+
+    environment {
+        IMAGE_NAME = "miweb-estatica"
+        CONTAINER_NAME = "miweb-estatica"
+        HOST_PORT = "8090"
+        CONTAINER_PORT = "80"
     }
 
     stages {
-        stage('Instalar dependencias') {
-            steps {
-                sh 'npm install'
-            }
-        }
-
-        stage('Ejecutar tests') {
-            steps {
-                sh 'chmod +x ./node_modules/.bin/jest'  // Soluciona el problema de permisos
-                sh 'npm test -- --ci --runInBand'
-            }
-        }
-
         stage('Construir Imagen Docker') {
-            when {
-                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
-            }
             steps {
-                sh 'docker build -t hola-mundo-node:latest .'
+                sh 'docker build -t $IMAGE_NAME .'
             }
         }
 
-        stage('Ejecutar Contenedor Node.js') {
-            when {
-                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
-            }
+        stage('Desplegar Contenedor') {
             steps {
                 sh '''
-                    docker stop hola-mundo-node || true
-                    docker rm hola-mundo-node || true
-                    docker run -d --name hola-mundo-node -p 3000:3000 hola-mundo-node:latest
+                    docker stop $CONTAINER_NAME || true
+                    docker rm $CONTAINER_NAME || true
+                    docker run -d --name $CONTAINER_NAME -p $HOST_PORT:$CONTAINER_PORT $IMAGE_NAME
                 '''
             }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Despliegue exitoso en http://localhost:$HOST_PORT"
+        }
+        failure {
+            echo "❌ Falló el despliegue"
         }
     }
 }
